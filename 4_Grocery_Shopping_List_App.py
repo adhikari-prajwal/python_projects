@@ -1,109 +1,86 @@
-
-
-shopping_list = []
-
+items = []
 
 def add_item():
     item = input("Enter grocery item: ").strip()
 
-    if not item:
-        print("Item name cannot be empty.")
+    if item == "":
+        print("Item cannot be empty.")
+    elif item.lower() in [x.lower() for x in items]:
+        print("Item is already in the list.")
+    else:
+        items.append(item)
+        print("Item added.")
+
+def show_items():
+    if len(items) == 0:
+        print("Shopping list is empty.")
         return
 
-    if item.lower() in [x.lower() for x in shopping_list]:
-        print("That item is already on the list.")
-        return
+    print("\nShopping List:")
 
-    shopping_list.append(item)
-    print("Item added.")
-
-
-def view_items():
-    print("\n--- Shopping List ---")
-
-    if not shopping_list:
-        print("Your shopping list is empty.")
-        return
-
-    for number, item in enumerate(shopping_list, start=1):
-        print(f"{number}. {item}")
-
+    for i in range(len(items)):
+        print(i + 1, ".", items[i])
 
 def remove_item():
-    view_items()
+    show_items()
 
-    if not shopping_list:
+    if len(items) == 0:
         return
 
     try:
         number = int(input("Enter item number to remove: "))
-
-        if number < 1 or number > len(shopping_list):
-            print("Invalid item number.")
-            return
-
-        removed = shopping_list.pop(number - 1)
-        print(f"{removed} removed from the list.")
-
     except ValueError:
         print("Please enter a whole number.")
+        return
 
+    if number >= 1 and number <= len(items):
+        items.pop(number - 1)
+        print("Item removed.")
+    else:
+        print("Invalid number.")
 
 def search_item():
-    if not shopping_list:
-        print("Your shopping list is empty.")
-        return
+    search = input("Enter item to search: ").lower()
+    found = False
 
-    search = input("Enter item to search: ").strip().lower()
+    for item in items:
+        if search in item.lower():
+            print("Found:", item)
+            found = True
 
-    for item in shopping_list:
-        if item.lower() == search:
-            print(f"{item} is on your shopping list.")
-            return
-
-    print("Item not found.")
-
+    if found == False:
+        print("Item not found.")
 
 def sort_items():
-    if not shopping_list:
-        print("Your shopping list is empty.")
-        return
-
-    shopping_list.sort()
-    print("Shopping list sorted alphabetically.")
-
+    items.sort()
+    print("Shopping list sorted.")
 
 def clear_list():
-    if not shopping_list:
-        print("The list is already empty.")
-        return
+    answer = input("Do you want to clear the list? (yes/no): ").lower()
 
-    confirm = input("Clear the entire list? (yes/no): ").strip().lower()
-
-    if confirm == "yes":
-        shopping_list.clear()
-        print("Shopping list cleared.")
+    if answer == "yes":
+        items.clear()
+        print("List cleared.")
     else:
         print("List was not cleared.")
 
-
 def main():
     while True:
-        print("\n===== GROCERY SHOPPING LIST =====")
+        print("\n--- GROCERY SHOPPING LIST ---")
         print("1. Add item")
-        print("2. View list")
+        print("2. Show list")
         print("3. Remove item")
         print("4. Search item")
         print("5. Sort list")
         print("6. Clear list")
         print("7. Exit")
 
-        choice = input("Enter your choice: ").strip()
+        choice = input("Enter your choice: ")
 
         if choice == "1":
             add_item()
         elif choice == "2":
-            view_items()
+            show_items()
         elif choice == "3":
             remove_item()
         elif choice == "4":
@@ -113,10 +90,9 @@ def main():
         elif choice == "6":
             clear_list()
         elif choice == "7":
-            print("Thank you for using the Shopping List App.")
+            print("Thank you!")
             break
         else:
-            print("Invalid choice. Please choose 1 to 7.")
-
+            print("Invalid choice.")
 
 main()

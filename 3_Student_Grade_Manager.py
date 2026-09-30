@@ -1,30 +1,23 @@
-
-
-students = []
-
+names = []
+marks = []
 
 def add_student():
-    print("\n--- Add Student ---")
-    name = input("Enter student name: ").strip()
-
-    if not name:
-        print("Name cannot be empty.")
-        return
+    name = input("Enter student name: ")
 
     try:
-        mark = float(input("Enter mark (0-100): "))
-
-        if mark < 0 or mark > 100:
-            print("Mark must be between 0 and 100.")
-            return
-
+        mark = float(input("Enter mark: "))
     except ValueError:
-        print("Please enter a valid number.")
+        print("Please enter a number.")
         return
 
-    students.append({"name": name, "mark": mark})
-    print("Student added successfully.")
-
+    if name == "":
+        print("Name cannot be empty.")
+    elif mark < 0 or mark > 100:
+        print("Mark must be between 0 and 100.")
+    else:
+        names.append(name)
+        marks.append(mark)
+        print("Student added.")
 
 def get_grade(mark):
     if mark >= 80:
@@ -36,102 +29,87 @@ def get_grade(mark):
     else:
         return "D"
 
-
-def view_students():
-    print("\n--- Student Records ---")
-
-    if not students:
-        print("No student records available.")
+def show_students():
+    if len(names) == 0:
+        print("No students found.")
         return
 
-    for number, student in enumerate(students, start=1):
-        grade = get_grade(student["mark"])
-        print(f"{number}. {student['name']} - "
-              f"{student['mark']:.1f} - Grade {grade}")
-
+    for i in range(len(names)):
+        grade = get_grade(marks[i])
+        print(i + 1, names[i], "-", marks[i], "-", grade)
 
 def search_student():
-    if not students:
-        print("No student records available.")
-        return
-
-    name = input("Enter student name to search: ").strip().lower()
+    search = input("Enter student name: ").lower()
     found = False
 
-    for student in students:
-        if student["name"].lower() == name:
-            print(f"Name: {student['name']}")
-            print(f"Mark: {student['mark']:.1f}")
-            print(f"Grade: {get_grade(student['mark'])}")
+    for i in range(len(names)):
+        if search in names[i].lower():
+            print(names[i], "-", marks[i], "-", get_grade(marks[i]))
             found = True
 
-    if not found:
+    if found == False:
         print("Student not found.")
 
-
 def class_summary():
-    if not students:
-        print("No student records available.")
+    if len(marks) == 0:
+        print("No marks available.")
         return
 
     total = 0
-    highest = students[0]
-    lowest = students[0]
+    highest = marks[0]
+    lowest = marks[0]
 
-    for student in students:
-        total += student["mark"]
+    for mark in marks:
+        total = total + mark
 
-        if student["mark"] > highest["mark"]:
-            highest = student
+        if mark > highest:
+            highest = mark
 
-        if student["mark"] < lowest["mark"]:
-            lowest = student["mark"]
+        if mark < lowest:
+            lowest = mark
 
-    average = total / len(students)
+    average = total / len(marks)
 
-    print("\n--- Class Summary ---")
-    print(f"Number of students: {len(students)}")
-    print(f"Average mark: {average:.2f}")
-    print(f"Highest: {highest['name']} ({highest['mark']:.1f})")
-    print(f"Lowest: {lowest['name']} ({lowest['mark']:.1f})")
-
+    print("Average mark:", average)
+    print("Highest mark:", highest)
+    print("Lowest mark:", lowest)
 
 def delete_student():
-    view_students()
+    show_students()
 
-    if not students:
+    if len(names) == 0:
         return
 
     try:
         number = int(input("Enter student number to delete: "))
-
-        if number < 1 or number > len(students):
-            print("Invalid student number.")
-            return
-
-        removed = students.pop(number - 1)
-        print(f"{removed['name']} was removed.")
-
     except ValueError:
         print("Please enter a whole number.")
+        return
 
+    if number >= 1 and number <= len(names):
+        position = number - 1
+        names.pop(position)
+        marks.pop(position)
+        print("Student deleted.")
+    else:
+        print("Invalid number.")
 
 def main():
     while True:
-        print("\n===== STUDENT GRADE MANAGER =====")
+        print("\n--- STUDENT GRADE MANAGER ---")
         print("1. Add student")
-        print("2. View students")
+        print("2. Show students")
         print("3. Search student")
         print("4. Class summary")
         print("5. Delete student")
         print("6. Exit")
 
-        choice = input("Enter your choice: ").strip()
+        choice = input("Enter your choice: ")
 
         if choice == "1":
             add_student()
         elif choice == "2":
-            view_students()
+            show_students()
         elif choice == "3":
             search_student()
         elif choice == "4":
@@ -139,10 +117,9 @@ def main():
         elif choice == "5":
             delete_student()
         elif choice == "6":
-            print("Program closed.")
+            print("Thank you!")
             break
         else:
-            print("Invalid choice. Please choose 1 to 6.")
-
+            print("Invalid choice.")
 
 main()

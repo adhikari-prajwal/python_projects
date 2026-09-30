@@ -1,88 +1,81 @@
-
-
 import random
 
-best_score = None
-
+best_score = 0
+games_played = 0
 
 def play_game():
     global best_score
+    global games_played
 
-    secret_number = random.randint(1, 50)
+    number = random.randint(1, 50)
     attempts = 0
-    max_attempts = 7
 
-    print("\nI have selected a number from 1 to 50.")
-    print(f"You have {max_attempts} attempts.")
+    print("\nI have chosen a number from 1 to 50.")
+    print("You have 7 chances to guess it.")
 
-    while attempts < max_attempts:
+    while attempts < 7:
         try:
             guess = int(input("Enter your guess: "))
-
-            if guess < 1 or guess > 50:
-                print("Please enter a number from 1 to 50.")
-                continue
-
         except ValueError:
             print("Please enter a whole number.")
             continue
 
-        attempts += 1
+        if guess < 1 or guess > 50:
+            print("Enter a number between 1 and 50.")
+            continue
 
-        if guess == secret_number:
-            print(f"Correct! You guessed it in {attempts} attempt(s).")
+        attempts = attempts + 1
 
-            if best_score is None or attempts < best_score:
-                best_score = attempts
+        if guess == number:
+            print("Congratulations! You guessed correctly.")
+            print("Attempts used:", attempts)
+
+            score = 8 - attempts
+
+            if score > best_score:
+                best_score = score
                 print("New best score!")
 
+            games_played = games_played + 1
             return
 
-        elif guess < secret_number:
-            print("Too low.")
+        elif guess < number:
+            print("Try a higher number.")
         else:
-            print("Too high.")
+            print("Try a lower number.")
 
-        print(f"Attempts remaining: {max_attempts - attempts}")
-
-    print(f"Game over! The number was {secret_number}.")
-
+    print("You ran out of chances.")
+    print("The number was:", number)
+    games_played = games_played + 1
 
 def show_hint():
-    print("\nHint: The secret number is between 1 and 50.")
-    print("Try to use the previous 'Too high' or 'Too low' messages.")
-
+    print("\nHint: Choose a number between 1 and 50.")
+    print("If your guess is too low, try a higher number.")
+    print("If your guess is too high, try a lower number.")
 
 def main():
-    games_played = 0
-
     while True:
-        print("\n===== NUMBER GUESSING GAME =====")
+        print("\n--- NUMBER GUESSING GAME ---")
         print("1. Play game")
-        print("2. Get a hint")
-        print("3. View best score")
-        print("4. View games played")
+        print("2. Show hint")
+        print("3. Show best score")
+        print("4. Show games played")
         print("5. Exit")
 
-        choice = input("Enter your choice: ").strip()
+        choice = input("Enter your choice: ")
 
         if choice == "1":
             play_game()
-            games_played += 1
         elif choice == "2":
             show_hint()
         elif choice == "3":
-            if best_score is None:
-                print("No score recorded yet.")
-            else:
-                print(f"Best score: {best_score} attempts")
+            print("Best score:", best_score)
         elif choice == "4":
-            print(f"Games played: {games_played}")
+            print("Games played:", games_played)
         elif choice == "5":
-            print("Thanks for playing!")
+            print("Thank you for playing!")
             break
         else:
-            print("Invalid choice. Please choose 1 to 5.")
-
+            print("Invalid choice.")
 
 main()

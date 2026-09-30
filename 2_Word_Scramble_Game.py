@@ -1,107 +1,80 @@
-
-
 import random
 
-words = [
-    "computer",
-    "python",
-    "keyboard",
-    "internet",
-    "school",
-    "program",
-    "function",
-    "science"
-]
+words = ["computer", "python", "school", "keyboard", "internet",
+         "science", "program", "function"]
 
+score = 0
 
-def scramble_word(word):
+def scramble(word):
     letters = list(word)
     random.shuffle(letters)
-    return "".join(letters)
+    result = ""
 
+    for letter in letters:
+        result = result + letter
+
+    return result
 
 def play_game():
+    global score
+
     word = random.choice(words)
-    scrambled = scramble_word(word)
+    mixed = scramble(word)
 
-    print("\nScrambled word:", scrambled)
-    print("You have 3 attempts.")
+    print("\nScrambled word:", mixed)
 
-    for attempt in range(1, 4):
-        answer = input(f"Attempt {attempt}: ").strip().lower()
-
-        if not answer:
-            print("Please enter an answer.")
-            continue
+    for attempt in range(3):
+        answer = input("Guess the word: ").lower()
 
         if answer == word:
-            points = 4 - attempt
-            print(f"Correct! You earned {points} point(s).")
-            return points
-
-        if attempt < 3:
-            print("Wrong answer. Try again.")
+            print("Correct!")
+            score = score + (3 - attempt)
+            return
         else:
-            print(f"Sorry! The correct word was '{word}'.")
+            print("Wrong guess.")
 
-    return 0
-
+    print("The correct word was:", word)
 
 def add_word():
-    word = input("Enter a new word: ").strip().lower()
+    word = input("Enter a new word: ").lower()
 
-    if not word.isalpha():
-        print("Please enter letters only.")
-        return
-
-    if word in words:
-        print("That word is already in the list.")
-        return
-
-    words.append(word)
-    print("New word added successfully.")
-
+    if word == "":
+        print("Word cannot be empty.")
+    elif word in words:
+        print("Word already exists.")
+    else:
+        words.append(word)
+        print("Word added.")
 
 def show_words():
-    print("\n--- Word List ---")
+    print("\nWord list:")
 
-    if not words:
-        print("The word list is empty.")
-        return
-
-    for number, word in enumerate(words, start=1):
-        print(f"{number}. {word}")
-
+    for word in words:
+        print("-", word)
 
 def main():
-    score = 0
-    games_played = 0
-
     while True:
-        print("\n===== WORD SCRAMBLE GAME =====")
+        print("\n--- WORD SCRAMBLE GAME ---")
         print("1. Play game")
-        print("2. Add a word")
-        print("3. View word list")
-        print("4. View score")
+        print("2. Add word")
+        print("3. Show words")
+        print("4. Show score")
         print("5. Exit")
 
-        choice = input("Enter your choice: ").strip()
+        choice = input("Enter your choice: ")
 
         if choice == "1":
-            score += play_game()
-            games_played += 1
+            play_game()
         elif choice == "2":
             add_word()
         elif choice == "3":
             show_words()
         elif choice == "4":
-            print(f"Games played: {games_played}")
-            print(f"Total score: {score}")
+            print("Your score:", score)
         elif choice == "5":
-            print("Thanks for playing!")
+            print("Game ended.")
             break
         else:
-            print("Invalid choice. Please choose 1 to 5.")
-
+            print("Invalid choice.")
 
 main()
